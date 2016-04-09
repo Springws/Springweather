@@ -6,9 +6,7 @@ import java.util.List;
  * Created by 15059 on 2016/3/28.
  */
 public class RetDataInfo {
-//    "city": "北京",
-//            "cityid": "101010100",
-//            "today":
+
     private String city;
     private String cityid;
     private TodayInfo today;

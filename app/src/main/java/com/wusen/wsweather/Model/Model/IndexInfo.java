@@ -4,14 +4,12 @@ package com.wusen.wsweather.Model.Model;
  * Created by 15059 on 2016/3/29.
  */
 public class IndexInfo {
-//    {
-//        "code": "fs",
-//            "details": "属中等强度紫外辐射天气，外出时应注意防护，建议涂擦SPF指数高于15，PA+的防晒护肤品。",
-//            "index": "中等",
-//            "name": "防晒指数",
-//            "otherName": ""
-//    },
-//
+
+    public final static String CODE = "code";
+    public final static String DETAILS = "details";
+    public final static String NAME = "name";
+    public final static String OTHER_NAME = "otherName";
+
     private String code;
     private String details;
     private String name;

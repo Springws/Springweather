@@ -4,15 +4,13 @@ package com.wusen.wsweather.Model.Model;
  * Created by 15059 on 2016/3/29.
  */
 public class ForecastInfo {
-//    {
-//        "date": "2016-03-30",
-//            "week": "星期三",
-//            "fengxiang": "无持续风向",
-//            "fengli": "微风级",
-//            "hightemp": "22℃",
-//            "lowtemp": "9℃",
-//            "type": "晴"
-//    },
+    public final static String DATE = "date";
+    public final static String WEEK = " week";
+    public final static String FENG_XIANG = "fengxiang";
+    public final static String FENG_LI = "fengli";
+    public final static String HIGH_TEMP = "hightemp";
+    public final static String LOW_TEMP = " lowtemp";
+    public final static String TYPE = "type";
 
     private String date;
     private String week;
@@ -21,6 +19,12 @@ public class ForecastInfo {
     private String hightemp;
     private String lowtemp;
     private String type;
+
+    private long _id;
+
+    public long get_id() {return _id;}
+
+    public void set_id(long _id) {this._id = _id;}
 
     public String getDate() {
         return date;

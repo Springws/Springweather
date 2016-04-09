@@ -83,8 +83,8 @@ public class ParseUtils {
 
     public static ResultInfo parseResult(String jsonDate){
         Gson gson = new Gson();
-        ResultInfo retDateInfo = gson.fromJson(jsonDate, ResultInfo.class);
-        return retDateInfo;
+        ResultInfo resultInfo = gson.fromJson(jsonDate, ResultInfo.class);
+        return resultInfo;
     }
 
     public static RetDataInfo parseRetdata(String jsonDate){

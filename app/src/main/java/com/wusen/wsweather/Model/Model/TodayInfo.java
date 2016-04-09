@@ -6,16 +6,17 @@ import java.util.List;
  * Created by 15059 on 2016/3/29.
  */
 public class TodayInfo {
-//    "date": "2016-03-29",
-//            "week": "星期二",
-//            "curTemp": "21℃",
-//            "aqi": "66",
-//            "fengxiang": "无持续风向",
-//            "fengli": "微风级",
-//            "hightemp": "22℃",
-//            "lowtemp": "7℃",
-//            "type": "晴",
-//            "index":
+
+    public final static String DATE = "date";
+    public final static String WEEK = " week";
+    public final static String CUR_TEMP = "curTemp";
+    public final static String AQI = "aqi";
+    public final static String FENG_XIANG = "fengxiang";
+    public final static String FENG_LI = "fengli";
+    public final static String HIGH_TEMP = "hightemp";
+    public final static String LOW_TEMP = " lowtemp";
+    public final static String TYPE = "type";
+
     private String date;
     private String week;
     private String curTemp;
@@ -26,6 +27,8 @@ public class TodayInfo {
     private String lowtemp;
     private String type;
     private List<IndexInfo> index;
+
+
 
     public String getDate() {
         return date;

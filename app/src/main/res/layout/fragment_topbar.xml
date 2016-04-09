@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:padding="5dp">
+
+    <ImageView
+        android:id="@+id/iv_location"
+        style="@style/background"
+        android:layout_width="26dp"
+        android:layout_height="26dp"
+        android:src="@mipmap/map" />
+
+    <TextView
+        android:id="@+id/top_location_tv"
+        android:textColor="@color/white"
+        android:layout_width="wrap_content"
+        android:layout_height="26dp"
+        android:text="城市名"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/iv_location"
+        android:layout_marginLeft="5dp"
+        android:gravity="center"
+        android:textSize="20dp" />
+
+    <ImageView
+        android:id="@+id/main_menu_iv"
+        style="@style/background"
+        android:layout_width="26dp"
+        android:layout_height="26dp"
+        android:src="@mipmap/menu"
+        android:scaleType="fitXY"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:id="@+id/main_update_tv"
+        style="@style/TextStyleWhite"
+        android:layout_width="wrap_content"
+        android:layout_height="26dp"
+        android:text="更新"
+        android:layout_below="@+id/main_menu_iv"
+        android:layout_alignParentRight="true" />
+
+    <TextView
+        android:id="@+id/update_tv"
+        style="@style/TextStyleWhite"
+        android:layout_width="wrap_content"
+        android:layout_height="26dp"
+        android:text="00:00"
+        android:layout_toLeftOf="@+id/main_update_tv"
+        android:layout_below="@id/main_menu_iv"
+        />
+
+
+</RelativeLayout>

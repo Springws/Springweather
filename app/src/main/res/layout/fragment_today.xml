@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@mipmap/bg3"
+    android:paddingTop="15dp"
+    xmlns:ptr="http://schemas.android.com/apk/res-auto">
+
+    <include layout="@layout/fragment_topbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"></include>
+
+    <com.handmark.pulltorefresh.library.PullToRefreshScrollView
+        android:id="@+id/today_scrollview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        ptr:ptrHeaderTextColor = "@color/white"
+        ptr:ptrDrawable = "@drawable/default_ptr_rotate"
+        ptr:ptrHeaderSubTextColor = "@color/white"
+        android:fillViewport="true">
+
+        <RelativeLayout
+            android:id="@+id/rl"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="5dp">
+
+            <TextView
+                android:id="@+id/date_tv"
+                style="@style/TextStyleWhite"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="四月五号"/>
+
+            <TextView
+                android:id="@+id/week_tv"
+                style="@style/TextStyleWhite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/date_tv"
+                android:text="周二"/>
+
+            <LinearLayout
+                android:id="@+id/ll"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_alignParentBottom="true">
+
+                <TextView
+                    android:id="@+id/today_temp_range_tv"
+                    style="@style/TextStyleWhite"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="top|center_horizontal"
+                    android:text="10-25°C" />
+
+                <TextView
+                    android:id="@+id/today_fengxiang_tv"
+                    style="@style/TextStyleWhite"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="top|center_horizontal"
+                    android:text="南风"/>
+
+                <TextView
+                    android:id="@+id/today_fengli_tv"
+                    style="@style/TextStyleWhite"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="top|center_horizontal"
+                    android:text="3-4级"/>
+
+            </LinearLayout>
+
+
+            <TextView
+                android:id="@+id/today_temp_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="48dp"
+                android:textColor="@color/white"
+                android:text="15°C"
+                android:layout_above="@+id/ll"
+                android:padding="10dp"
+                />
+            <TextView
+                android:id="@+id/today_type_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="36dp"
+                android:textColor="@color/white"
+                android:layout_toRightOf="@+id/today_temp_tv"
+                android:layout_above="@id/ll"
+                android:text="多云" />
+
+        </RelativeLayout>
+    </com.handmark.pulltorefresh.library.PullToRefreshScrollView>
+
+
+
+</LinearLayout>
