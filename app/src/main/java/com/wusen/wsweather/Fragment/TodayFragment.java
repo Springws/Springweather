@@ -1,12 +1,16 @@
 package com.wusen.wsweather.Fragment;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ScrollView;
@@ -16,20 +20,24 @@ import android.widget.Toast;
 import com.baidu.apistore.sdk.ApiCallBack;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
+import com.melnykov.fab.FloatingActionButton;
 import com.wusen.wsweather.Activity.MainActivity;
 import com.wusen.wsweather.Application.MyApplication;
 import com.wusen.wsweather.Constant.Constant;
+import com.wusen.wsweather.Model.Model.IndexInfo;
 import com.wusen.wsweather.Model.Model.TodayInfo;
 import com.wusen.wsweather.R;
 import com.wusen.wsweather.Utils.FormatUtils;
 import com.wusen.wsweather.Utils.HttpUtils;
 import com.wusen.wsweather.Utils.ParseUtils;
 
+import citypicker.CityPickerActivity;
+
 
 /**
  * Created by 15059 on 2016/4/5.
  */
-public class TodayFragment extends Fragment{
+public class TodayFragment extends Fragment implements OnClickListener{
 
     private String city;
     private String date;
@@ -41,8 +49,11 @@ public class TodayFragment extends Fragment{
     private String lowtemp;
     private String type;
     private String updateTime;
+    private String skinDetail;
     private MyApplication app;
 
+    AlertDialog.Builder builder;
+    private AlertDialog dialog;
     private View view;
     private ImageView locationIv;
     private TextView cityNameTv;
@@ -55,6 +66,7 @@ public class TodayFragment extends Fragment{
     private TextView fengliTv;
     private TextView fengxiangTv;
     private PullToRefreshScrollView scrollView;
+    private com.melnykov.fab.FloatingActionButton addBtn;
 
     private MainActivity mainActivity;
     private boolean isFromSp = false;
@@ -96,6 +108,8 @@ public class TodayFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_today, null);
         initView();
+        locationIv.setOnClickListener(this);
+        addBtn.setOnClickListener(this);
         scrollView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ScrollView>() {
             @Override
             public void onRefresh(PullToRefreshBase<ScrollView> refreshView) {
@@ -125,6 +139,9 @@ public class TodayFragment extends Fragment{
         city = app.sp.getString(Constant.CITY_NAME, null);
         date = FormatUtils.formatDate();
         week = FormatUtils.formatWeek();
+
+        skinDetail = app.sp.getString(IndexInfo.DETAILS,null);
+        buildDialog(skinDetail);
     }
 
     public void initView() {
@@ -139,6 +156,7 @@ public class TodayFragment extends Fragment{
         fengliTv = (TextView) view.findViewById(R.id.today_fengli_tv);
         fengxiangTv = (TextView) view.findViewById(R.id.today_fengxiang_tv);
         scrollView = (PullToRefreshScrollView) view.findViewById(R.id.today_scrollview);
+        addBtn = (FloatingActionButton) view.findViewById(R.id.fab);
     }
 
     public void showWeather() {
@@ -158,7 +176,7 @@ public class TodayFragment extends Fragment{
             @Override
             public void onError(int i, String s, Exception e) {
                 super.onError(i, s, e);
-                Toast.makeText(mainActivity, "对不起查询失败", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mainActivity, "对不起查询失败，请检查网络连接", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -175,8 +193,12 @@ public class TodayFragment extends Fragment{
                 fengli = todayInfo.getFengli();
                 date = FormatUtils.formatDate();
                 week = FormatUtils.formatWeek();
+
+                skinDetail = ParseUtils.parseIndex(response).get(1).getDetails();
+                buildDialog(skinDetail);
                 showWeather();
                 HttpUtils.saveInfo(s, app, city);
+                mainActivity.update();
             }
 
             @Override
@@ -186,5 +208,36 @@ public class TodayFragment extends Fragment{
                 scrollView.onRefreshComplete();
             }
         });
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId())
+        {
+            case R.id.iv_location:
+                Intent intent = new Intent(getActivity(), CityPickerActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.fab:
+                builder.show();
+                break;
+            default:
+                break;
+        }
+    }
+
+    public static interface updateListener{
+        public void update();
+    }
+
+    public void buildDialog(String detail){
+
+        builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("护肤提示");
+        builder.setMessage(detail);
+        builder.setPositiveButton("知道啦！", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {}});
+        dialog = builder.create();
     }
 }

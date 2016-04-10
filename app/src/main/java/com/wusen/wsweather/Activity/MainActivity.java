@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements TodayFragment.updateListener {
 
 
 
@@ -69,5 +69,10 @@ public class MainActivity extends AppCompatActivity {
         fragmentList.add(foreCastFragment);
         FragmentAdapter adapter = new FragmentAdapter(getSupportFragmentManager(),this,fragmentList);
         viewPager.setAdapter(adapter);
+    }
+
+    @Override
+    public void update() {
+            foreCastFragment.updateFromDB();
     }
 }

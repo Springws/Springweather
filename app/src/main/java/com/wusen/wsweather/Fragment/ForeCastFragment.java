@@ -1,6 +1,7 @@
 package com.wusen.wsweather.Fragment;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -12,6 +13,7 @@ import android.widget.Toast;
 
 import com.baidu.apistore.sdk.ApiCallBack;
 import com.lidroid.xutils.exception.DbException;
+import com.wusen.wsweather.Activity.MainActivity;
 import com.wusen.wsweather.Adapter.ForecastAdapter;
 import com.wusen.wsweather.Application.MyApplication;
 import com.wusen.wsweather.Constant.Constant;
@@ -31,6 +33,8 @@ public class ForeCastFragment extends Fragment {
     private ListView forecastLv;
     private ForecastAdapter adapter;
     private String city;
+    private MainActivity mainActivity;
+    private List<ForecastInfo> forecastInfos;
 
     public static Fragment getInstance(String city) {
         ForeCastFragment fragment = new ForeCastFragment();
@@ -38,6 +42,12 @@ public class ForeCastFragment extends Fragment {
         bundle.putString(Constant.CITY_NAME, city);
         fragment.setArguments(bundle);
         return fragment;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mainActivity = (MainActivity) context;
     }
 
     @Override
@@ -53,7 +63,6 @@ public class ForeCastFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_forecast, null);
         forecastLv = (ListView) view.findViewById(R.id.forecast_lv);
-        List<ForecastInfo> forecastInfos = null;
         try {
             forecastInfos = app.dbForecast.findAll(ForecastInfo.class);
         } catch (DbException e) {
@@ -75,7 +84,7 @@ public class ForeCastFragment extends Fragment {
             @Override
             public void onError(int i, String s, Exception e) {
                 super.onError(i, s, e);
-                Toast.makeText(getActivity(), "对不起查询失败", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "对不起查询失败,请检查网络连接", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -88,7 +97,19 @@ public class ForeCastFragment extends Fragment {
             }
         });
     }
+
+    public void updateFromDB() {
+        try {
+            forecastInfos = app.dbForecast.findAll(ForecastInfo.class);
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+        adapter = new ForecastAdapter(getActivity(), forecastInfos);
+        forecastLv.setAdapter(adapter);
+    }
 }
+
+
 
 
 

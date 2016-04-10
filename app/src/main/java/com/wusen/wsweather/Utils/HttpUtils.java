@@ -12,6 +12,7 @@ import com.lidroid.xutils.exception.DbException;
 import com.wusen.wsweather.Application.MyApplication;
 import com.wusen.wsweather.Constant.Constant;
 import com.wusen.wsweather.Model.Model.ForecastInfo;
+import com.wusen.wsweather.Model.Model.IndexInfo;
 import com.wusen.wsweather.Model.Model.TodayInfo;
 
 import java.util.List;
@@ -56,6 +57,10 @@ public class HttpUtils {
         editor.putString(TodayInfo.LOW_TEMP,todayInfo.getLowtemp());
         editor.putString(TodayInfo.FENG_XIANG,todayInfo.getFengxiang());
         editor.putString(TodayInfo.TYPE,todayInfo.getType());
+
+        IndexInfo indexInfo = ParseUtils.parseIndex(response).get(1);
+        editor.putString(indexInfo.DETAILS,indexInfo.getDetails());
+
         editor.commit();
     }
 
