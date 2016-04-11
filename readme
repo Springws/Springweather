@@ -1,0 +1,3 @@
+这款天气预报基于百度API，http://apistore.baidu.com/apiworks/servicedetail/112.html   能拿到生活建议，和历史七天的数据，本app只展示了
+四天的天气预报和生活建议中的生活指数，异步网络请求用的是百度api提供的sdk，在百度api中有
+
