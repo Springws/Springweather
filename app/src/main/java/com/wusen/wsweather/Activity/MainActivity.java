@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.WindowManager;
 
 import com.wusen.wsweather.Adapter.FragmentAdapter;
@@ -35,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements TodayFragment.upd
     private boolean isFromCityPicker = false;
     private ViewPager viewPager;
 
+    //isFromCityPicker判断是不是从cityPickerActivity跳转过来
     public static void actionStart(String city, Context context,boolean isFromCityPicker) {
         Intent intent = new Intent();
         intent.putExtra("city", city);
@@ -56,14 +58,18 @@ public class MainActivity extends AppCompatActivity implements TodayFragment.upd
         }else {
             city = app.sp.getString(Constant.CITY_NAME,"杭州");
         }
-        initFragment(city);
+        Log.i("main",isFromCityPicker+"");
+        initFragment(city,isFromCityPicker);
+        //Log.i("main",city);
+
 
     }
 
-    public void initFragment(String city){
+    public void initFragment(String city,boolean isFromCityPicker){
         viewPager = (ViewPager) findViewById(R.id.main_pager);
         fragmentList = new ArrayList<>();
-        todayFragment = (TodayFragment) TodayFragment.getInstance(city);
+        todayFragment = (TodayFragment) TodayFragment.getInstance(city,isFromCityPicker);
+        Log.i("initFragment",isFromCityPicker+"");
         foreCastFragment = (ForeCastFragment) ForeCastFragment.getInstance(city);
         fragmentList.add(todayFragment);
         fragmentList.add(foreCastFragment);
@@ -71,6 +77,7 @@ public class MainActivity extends AppCompatActivity implements TodayFragment.upd
         viewPager.setAdapter(adapter);
     }
 
+    //接口回调实现数据的同步
     @Override
     public void update() {
             foreCastFragment.updateFromDB();

@@ -22,7 +22,7 @@ import java.util.List;
  */
 public class HttpUtils {
 
-
+     //得到json数据
     public static void getJson(String city, String address, ApiCallBack callBack) {
         String URL = address;
         Parameters param = new Parameters();
@@ -30,6 +30,7 @@ public class HttpUtils {
         ApiStoreSDK.execute(URL, ApiStoreSDK.GET, param, callBack);
     }
 
+    //从服务器中拿到天气信息
     public static void getDateFromServer(final Context context, final String city,final MyApplication app) {
         HttpUtils.getJson(city, Constant.Url,new ApiCallBack() {
             @Override
@@ -46,6 +47,7 @@ public class HttpUtils {
         });
     }
 
+    //缓存今日天气信息到 SharedPreferences
     public static void saveTodayInfo(String s, MyApplication app){
         String response = ParseUtils.decodeUnicode(s);
         TodayInfo todayInfo = ParseUtils.parseToday(response);
@@ -64,6 +66,7 @@ public class HttpUtils {
         editor.commit();
     }
 
+    //存取天气预报到sqlite
     public static void saveForecastInfo(String s,MyApplication app){
         String response = ParseUtils.decodeUnicode(s);
         List<ForecastInfo> forecastInfos = ParseUtils.parseForecastInfo(s);
@@ -76,6 +79,7 @@ public class HttpUtils {
         }
     }
 
+    //保存天气信息
     public static void saveInfo(String s,MyApplication app,String city){
         saveTodayInfo(s,app);
         saveForecastInfo(s,app);

@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -37,7 +38,7 @@ import citypicker.CityPickerActivity;
 /**
  * Created by 15059 on 2016/4/5.
  */
-public class TodayFragment extends Fragment implements OnClickListener{
+public class TodayFragment extends Fragment implements OnClickListener {
 
     private String city;
     private String date;
@@ -49,7 +50,7 @@ public class TodayFragment extends Fragment implements OnClickListener{
     private String lowtemp;
     private String type;
     private String updateTime;
-    private String skinDetail;
+    private String skinDetail; //护肤提示
     private MyApplication app;
 
     AlertDialog.Builder builder;
@@ -69,13 +70,14 @@ public class TodayFragment extends Fragment implements OnClickListener{
     private com.melnykov.fab.FloatingActionButton addBtn;
 
     private MainActivity mainActivity;
-    private boolean isFromSp = false;
+    private boolean isFromSp = false;  //判断是否是从本地SharedPreferences得到数据
+    private boolean isFromCitypicker = false; //判断是否从CityPickerActivity跳转
 
-
-    public static Fragment getInstance(String city) {
+    public static Fragment getInstance(String city, boolean isFromCityPicker) {
         TodayFragment fragment = new TodayFragment();
         Bundle bundle = new Bundle();
         bundle.putString(Constant.CITY_NAME, city);
+        bundle.putBoolean(Constant.IS_FROM_CITYPICKER, isFromCityPicker);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -90,10 +92,14 @@ public class TodayFragment extends Fragment implements OnClickListener{
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         app = (MyApplication) getActivity().getApplication();
-        final Bundle bundle = this.getArguments();
+        Bundle bundle = this.getArguments();
         city = bundle.getString(Constant.CITY_NAME);
-        if (app.sp.getBoolean(Constant.IS_FIRST, true)) {
+        isFromCitypicker = bundle.getBoolean(Constant.IS_FROM_CITYPICKER);
+        Log.i("onCreate", isFromCitypicker + "");
+        // Log.i("today",city);
+        if (isFromCitypicker) {
             getFromServer(city);
+            //showWeather();
             SharedPreferences.Editor editor = app.sp.edit();
             editor.putBoolean(Constant.IS_FIRST, false);
             editor.commit();
@@ -118,6 +124,7 @@ public class TodayFragment extends Fragment implements OnClickListener{
             }
         });
         if (isFromSp) {
+            Log.i("citypicker", city);
             showWeather();
         }
         return view;
@@ -128,6 +135,8 @@ public class TodayFragment extends Fragment implements OnClickListener{
         super.onActivityCreated(savedInstanceState);
     }
 
+
+    //从本地缓存读取天气信息
     public void updateInfoFromSp() {
         type = app.sp.getString(TodayInfo.TYPE, Constant.DEFAULT_VALUE);
         fengxiang = app.sp.getString(TodayInfo.FENG_XIANG, Constant.DEFAULT_VALUE);
@@ -136,11 +145,11 @@ public class TodayFragment extends Fragment implements OnClickListener{
         curTemp = app.sp.getString(TodayInfo.CUR_TEMP, Constant.DEFAULT_VALUE);
         fengli = app.sp.getString(TodayInfo.FENG_LI, Constant.DEFAULT_VALUE);
         updateTime = app.sp.getString(Constant.TIME, null);
-        city = app.sp.getString(Constant.CITY_NAME, null);
+        //city = app.sp.getString(Constant.CITY_NAME, null);
         date = FormatUtils.formatDate();
         week = FormatUtils.formatWeek();
 
-        skinDetail = app.sp.getString(IndexInfo.DETAILS,null);
+        skinDetail = app.sp.getString(IndexInfo.DETAILS, null);
         buildDialog(skinDetail);
     }
 
@@ -171,7 +180,8 @@ public class TodayFragment extends Fragment implements OnClickListener{
         fengxiangTv.setText(fengxiang);
     }
 
-    public void getFromServer(final String city){
+    //从服务器得到天气信息
+    public void getFromServer(final String city) {
         HttpUtils.getJson(city, Constant.Url, new ApiCallBack() {
             @Override
             public void onError(int i, String s, Exception e) {
@@ -184,27 +194,32 @@ public class TodayFragment extends Fragment implements OnClickListener{
                 super.onSuccess(i, s);
                 updateTime = FormatUtils.formatTime();
                 String response = ParseUtils.decodeUnicode(s);
-                TodayInfo todayInfo = ParseUtils.parseToday(response);
-                type = todayInfo.getType();
-                curTemp = todayInfo.getCurTemp();
-                lowtemp = todayInfo.getLowtemp();
-                hightemp = todayInfo.getHightemp();
-                fengxiang = todayInfo.getFengxiang();
-                fengli = todayInfo.getFengli();
-                date = FormatUtils.formatDate();
-                week = FormatUtils.formatWeek();
-
-                skinDetail = ParseUtils.parseIndex(response).get(1).getDetails();
-                buildDialog(skinDetail);
-                showWeather();
-                HttpUtils.saveInfo(s, app, city);
-                mainActivity.update();
+                int errNum = ParseUtils.parseResult(response).getErrNum();
+                //服务器返回失败时errNum为-1
+                if(errNum != -1) {
+                    TodayInfo todayInfo = ParseUtils.parseToday(response);
+                    type = todayInfo.getType();
+                    curTemp = todayInfo.getCurTemp();
+                    lowtemp = todayInfo.getLowtemp();
+                    hightemp = todayInfo.getHightemp();
+                    fengxiang = todayInfo.getFengxiang();
+                    fengli = todayInfo.getFengli();
+                    date = FormatUtils.formatDate();
+                    week = FormatUtils.formatWeek();
+                    //得到护肤提示信息
+                    skinDetail = ParseUtils.parseIndex(response).get(1).getDetails();
+                    buildDialog(skinDetail);
+                    showWeather();
+                    HttpUtils.saveInfo(s, app, city);
+                    //实现mainActivity数据同步
+                    mainActivity.update();
+                }
             }
 
             @Override
             public void onComplete() {
                 super.onComplete();
-                Toast.makeText(mainActivity,Constant.UPDATE_SUCCESS,Toast.LENGTH_SHORT).show();
+                Toast.makeText(mainActivity, Constant.UPDATE_SUCCESS, Toast.LENGTH_SHORT).show();
                 scrollView.onRefreshComplete();
             }
         });
@@ -212,11 +227,11 @@ public class TodayFragment extends Fragment implements OnClickListener{
 
     @Override
     public void onClick(View view) {
-        switch (view.getId())
-        {
+        switch (view.getId()) {
             case R.id.iv_location:
                 Intent intent = new Intent(getActivity(), CityPickerActivity.class);
                 startActivity(intent);
+                getActivity().finish();
                 break;
             case R.id.fab:
                 builder.show();
@@ -226,18 +241,21 @@ public class TodayFragment extends Fragment implements OnClickListener{
         }
     }
 
-    public static interface updateListener{
+    //接口回调实现数据同步
+    public static interface updateListener {
         public void update();
     }
 
-    public void buildDialog(String detail){
+    public void buildDialog(String detail) {
 
         builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("护肤提示");
         builder.setMessage(detail);
         builder.setPositiveButton("知道啦！", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialogInterface, int i) {}});
+            public void onClick(DialogInterface dialogInterface, int i) {
+            }
+        });
         dialog = builder.create();
     }
 }

@@ -8,7 +8,7 @@ public class Constant {
     public static final String Url = "http://apis.baidu.com/apistore/weatherservice/recentweathers";
     public static final String IS_FIRST = "isFirst";
     public static final String TIME = "TimeOfCurrent";
-    public static final String DEFAULT_VALUE = "数据暂无";
+    public static final String DEFAULT_VALUE = "暂无";
     public static final String CITY_NAME = "cityName";
     public static final String IS_FROM_CITYPICKER = "cityPicker";
     public static final String UPDATE_SUCCESS = "已更新至最新的数据";

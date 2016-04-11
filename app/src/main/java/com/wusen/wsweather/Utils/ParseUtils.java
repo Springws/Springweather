@@ -14,7 +14,7 @@ import java.util.List;
  */
 public class ParseUtils {
 
-    //unicode解码
+    //unicode解码到utf-8
     public static String decodeUnicode(String theString) {
         char aChar;
         int len = theString.length();
@@ -81,6 +81,7 @@ public class ParseUtils {
         return outBuffer.toString();
     }
 
+    //解析json数据
     public static ResultInfo parseResult(String jsonDate){
         Gson gson = new Gson();
         ResultInfo resultInfo = gson.fromJson(jsonDate, ResultInfo.class);
@@ -92,16 +93,19 @@ public class ParseUtils {
         return retDataInfo;
     }
 
+    //解析今日天气
     public static TodayInfo parseToday(String jsonDate){
         TodayInfo todayInfo = parseRetdata(jsonDate).getToday();
         return todayInfo;
     }
 
+    //解析生活建议
     public static List<IndexInfo> parseIndex(String jsonDate){
         List<IndexInfo> indexInfo = parseToday(jsonDate).getIndex();
         return indexInfo;
     }
 
+    //解析天气预报
     public static List<ForecastInfo> parseForecastInfo(String jsonDate){
         List<ForecastInfo>  forecastInfos = parseRetdata(jsonDate).getForecast();
         return forecastInfos;

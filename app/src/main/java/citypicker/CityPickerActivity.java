@@ -31,10 +31,6 @@ import citypicker.model.LocateState;
 import citypicker.utils.StringUtils;
 import citypicker.view.SideLetterBar;
 
-
-/**
- * author zaaach on 2016/1/26.
- */
 public class CityPickerActivity extends AppCompatActivity implements View.OnClickListener {
     public static final int REQUEST_CODE_PICK_CITY = 2333;
     public static final String KEY_PICKED_CITY = "picked_city";

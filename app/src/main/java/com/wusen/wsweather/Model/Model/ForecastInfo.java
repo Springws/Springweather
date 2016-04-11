@@ -12,13 +12,13 @@ public class ForecastInfo {
     public final static String LOW_TEMP = " lowtemp";
     public final static String TYPE = "type";
 
-    private String date;
-    private String week;
+    private String date;  //日期
+    private String week;  //星期几
     private String fengxiang;
     private String fengli;
     private String hightemp;
     private String lowtemp;
-    private String type;
+    private String type; //天气类型
 
     private long _id;
 

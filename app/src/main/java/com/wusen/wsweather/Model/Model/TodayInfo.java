@@ -25,8 +25,8 @@ public class TodayInfo {
     private String fengli;
     private String hightemp;
     private String lowtemp;
-    private String type;
-    private List<IndexInfo> index;
+    private String type;    //天气类型
+    private List<IndexInfo> index; //生活建议
 
 
 

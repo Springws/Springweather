@@ -7,6 +7,7 @@ import java.util.Calendar;
  */
 public class FormatUtils {
 
+    //返回日期
     public static String formatDate(){
         Calendar calendar = Calendar.getInstance();
         int month = calendar.get(Calendar.MONTH)+1;
@@ -15,6 +16,7 @@ public class FormatUtils {
         return date;
     }
 
+    //返回时间
     public static String formatTime(){
         Calendar calendar = Calendar.getInstance();
         String hour = calendar.get(Calendar.HOUR_OF_DAY)+"";
@@ -32,6 +34,7 @@ public class FormatUtils {
         return time;
     }
 
+    //返回星期几
     public static String formatWeek(){
         Calendar calendar = Calendar.getInstance();
         String[] weekDays = {"星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"};
@@ -40,6 +43,7 @@ public class FormatUtils {
 
     }
 
+    //返回最低温度至最高温度
     public static String formatRange(String low,String height){
         String s = low+"-"+height;
         return s;

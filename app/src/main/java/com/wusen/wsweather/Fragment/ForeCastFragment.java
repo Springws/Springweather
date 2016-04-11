@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -79,6 +80,7 @@ public class ForeCastFragment extends Fragment {
 
     }
 
+    //从服务器读取天气
     public void getFromServer(String city) {
         HttpUtils.getJson(city, Constant.Url, new ApiCallBack() {
             @Override
@@ -91,13 +93,20 @@ public class ForeCastFragment extends Fragment {
             public void onSuccess(int i, String s) {
                 super.onSuccess(i, s);
                 String response = ParseUtils.decodeUnicode(s);
-                List<ForecastInfo> forecastInfos = ParseUtils.parseForecastInfo(response);
-                adapter = new ForecastAdapter(getActivity(), forecastInfos);
-                forecastLv.setAdapter(adapter);
+                int errNum = ParseUtils.parseResult(response).getErrNum();
+                Log.i("forecast",errNum+"");
+                if(errNum!= -1) {
+                    List<ForecastInfo> forecastInfos = ParseUtils.parseForecastInfo(response);
+                    adapter = new ForecastAdapter(getActivity(), forecastInfos);
+                    forecastLv.setAdapter(adapter);
+                }else {
+                    Toast.makeText(getActivity(),"对不起服务器超时",Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
 
+    //从本地数据库读取缓存天气
     public void updateFromDB() {
         try {
             forecastInfos = app.dbForecast.findAll(ForecastInfo.class);

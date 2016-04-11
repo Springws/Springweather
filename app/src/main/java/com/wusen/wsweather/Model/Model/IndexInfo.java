@@ -6,7 +6,7 @@ package com.wusen.wsweather.Model.Model;
 public class IndexInfo {
 
     public final static String CODE = "code";
-    public final static String DETAILS = "details";
+    public final static String DETAILS = "details"; //生活建议
     public final static String NAME = "name";
     public final static String OTHER_NAME = "otherName";
 
